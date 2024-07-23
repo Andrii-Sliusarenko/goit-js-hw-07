@@ -1,38 +1,43 @@
+const controls = document.querySelector('#controls');
+const input = controls.querySelector('input');
+const createButton = controls.querySelector('[data-create]');
+const destroyButton = controls.querySelector('[data-destroy]');
+const boxesContainer = document.querySelector('#boxes');
+
 function getRandomHexColor() {
   return `#${Math.floor(Math.random() * 16777215)
     .toString(16)
-    .padStart(6, 0)}`;
+    .padStart(6, '0')}`;
 }
+
 function createBoxes(amount) {
   const boxesContainer = document.querySelector('#boxes');
   boxesContainer.innerHTML = '';
 
   let size = 30;
-  for (let i = 0; i < amount; i++) {
+  const boxes = Array.from({ length: amount }, () => {
     const div = document.createElement('div');
     div.style.width = `${size}px`;
     div.style.height = `${size}px`;
     div.style.backgroundColor = getRandomHexColor();
-    boxesContainer.appendChild(div);
+
     size += 10;
-  }
+    return div;
+  });
+
+  boxesContainer.append(...boxes);
 }
 
 function destroyBoxes() {
-  const boxesContainer = document.querySelector('#boxes');
   boxesContainer.innerHTML = '';
 }
 
-document.querySelector('[data-create]').addEventListener('click', () => {
-  const input = document.querySelector('#controls input');
-  const amount = parseInt(input.value);
-
+createButton.addEventListener('click', () => {
+  const amount = Number(input.value);
   if (amount >= 1 && amount <= 100) {
     createBoxes(amount);
     input.value = '';
-  } else {
-    alert('Please enter a number between 1 and 100.');
   }
 });
 
-document.querySelector('[data-destroy]').addEventListener('click', destroyBoxes);
+destroyButton.addEventListener('click', destroyBoxes);
